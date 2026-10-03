@@ -3,8 +3,6 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
 import java.util.ArrayList;
-// temp
-import java.util.Scanner;
 
 public class Calculator {
 
@@ -23,6 +21,7 @@ public class Calculator {
     static JButton second = new JButton("2nd");
     static JButton del = new JButton("del");
     static JButton clear = new JButton("CE");
+    static JButton clearAll = new JButton("CA");
     static JButton openParen = new JButton("(");
     static JButton closeParen = new JButton(")");
 
@@ -33,7 +32,7 @@ public class Calculator {
     static JButton square = new JButton("x^2");
     static JButton divide = new JButton("÷");
     static JButton log = new JButton("log");
-    static JButton multiply = new JButton("x");
+    static JButton multiply = new JButton("*");
     static JButton ln = new JButton("ln");
     static JButton minus = new JButton("-");
     static JButton decimal = new JButton(".");
@@ -54,10 +53,10 @@ public class Calculator {
     static Color buttonColor = new Color(245, 245, 245);
 
     static String operation = "";
+    static ArrayList<String> operations = new ArrayList<String>();
     static ArrayList<String> tokens = new ArrayList<String>();
 
     public static void main(String[] args) {
-/* Commenting this out to build the operations handler first
         int i = 0;
 
         // row 1
@@ -121,7 +120,7 @@ public class Calculator {
         }
 
         textDisplay.setSize(300, 100);
-        updateDisplay("Hello!");
+        updateDisplay("");
 
         display.setLayout(new BoxLayout(display, BoxLayout.Y_AXIS));
 
@@ -134,20 +133,97 @@ public class Calculator {
         clear.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                clearOperation();
                 updateDisplay("");
             }
         });
+        clearAll.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                clearOperation();
+                operations.clear();
+                updateDisplay("");
+            }
+        });
+        del.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!operation.equals("")) {
+                    if (operation.endsWith("sin") || operation.endsWith("cos") || operation.endsWith("tan")) {
+                        operation = operation.substring(0, operation.length() - 3);
+                    } else if (operation.endsWith("log")) {
+                        operation = operation.substring(0, operation.length() - 3);
+                    } else {
+                        operation = operation.substring(0, operation.length() - 1);
+                    }
+                    updateDisplay(operation);
+                }
+            }
+        });
+        enter.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!operation.equals("")) {
+                    operations.add(operation);
+                    parseOperation(operation);
+                    updateDisplay(operation);
+                }
+            }
+        });
+        openParen.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addToOperation("(");
+                updateDisplay(operation);
+            }
+        });
+        closeParen.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addToOperation(")");
+                updateDisplay(operation);
+            }
+        });
+        sin.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addToOperation("sin");
+                updateDisplay(operation);
+            }
+        });
+        cos.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addToOperation("cos");
+                updateDisplay(operation);
+            }
+        });
+        tan.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addToOperation("tan");
+                updateDisplay(operation);
+            }
+        });
+
+        ActionListener generalButtonHandler = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String cmd = e.getActionCommand();
+                if (!cmd.equals("")) { 
+                    addToOperation(cmd);
+                    updateDisplay(operation);
+                }
+            }
+        };
+        JButton[] generalKeys = {one, two, three, four, five, six, seven, eight, nine, zero, plus, minus, multiply, divide, exponent, square, log, ln, decimal, negative};
+        for (JButton key : generalKeys) {
+            key.addActionListener(generalButtonHandler);
+        }
 
         frame.setSize(400, 600);
         frame.setVisible(true);
-*/
 
-    // testing operations handler
-        Scanner scnr = new Scanner(System.in);
-        System.out.print("Operation >> ");
-        operation = scnr.nextLine();
-        parseOperation(operation);
-        scnr.close();
     }
 
     static void closeProgram() {
@@ -202,8 +278,7 @@ public class Calculator {
 
         } while (hasParentheses);
 
-        double finalResult = parseParentheses(op);
-        System.out.println("Result: " + finalResult);
+        operation = Double.toString(parseParentheses(op));
     }
 
     static double parseParentheses(String op) {
@@ -369,7 +444,7 @@ public class Calculator {
 
         for (i = 0; i < tokens.size(); i++) {
             String token = tokens.get(i);
-            if (token.equals("*") || token.equals("/")) {
+            if (token.equals("*") || token.equals("÷")) {
                 double left = Double.parseDouble(tokens.get(i - 1));
                 double right = Double.parseDouble(tokens.get(i + 1));
                 double result = token.equals("*") ? Functions.multiply(left, right) : Functions.divide(left, right);

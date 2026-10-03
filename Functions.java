@@ -1,5 +1,7 @@
 public class Functions {
 
+    private Functions() {} // Private constructor to prevent instantiation
+
     static double add(double a, double b) {
         return a + b;
     }
