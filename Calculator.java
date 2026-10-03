@@ -217,7 +217,10 @@ public class Calculator {
             } else if (Character.isLetter(c)) {
                 if (!currentNum.equals("")) {
                     localTokens.add(currentNum);
+                    localTokens.add("*");
                     currentNum = "";
+                } else if (!localTokens.isEmpty() && localTokens.get(localTokens.size() - 1).equals(")")) {
+                    localTokens.add("*");
                 }
                 String currentWord = "";
                 while (i < op.length() && Character.isLetter(op.charAt(i))) {
@@ -230,6 +233,12 @@ public class Calculator {
                 if (!currentNum.equals("")) {
                     localTokens.add(currentNum);
                     currentNum = "";
+                }
+                if (c == '(' && !localTokens.isEmpty()) {
+                    String lastToken = localTokens.get(localTokens.size() - 1);
+                    if (Character.isDigit(lastToken.charAt(lastToken.length() - 1)) || lastToken.equals(")")) {
+                        localTokens.add("*");
+                    }
                 }
                 localTokens.add(String.valueOf(c));
             }
