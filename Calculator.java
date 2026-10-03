@@ -3,6 +3,8 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
 import java.util.ArrayList;
+// temp
+import java.util.Scanner;
 
 public class Calculator {
 
@@ -55,6 +57,7 @@ public class Calculator {
     static ArrayList<String> tokens = new ArrayList<String>();
 
     public static void main(String[] args) {
+/* Commenting this out to build the operations handler first
         int i = 0;
 
         // row 1
@@ -137,25 +140,33 @@ public class Calculator {
 
         frame.setSize(400, 600);
         frame.setVisible(true);
+*/
+
+    // testing operations handler
+        Scanner scnr = new Scanner(System.in);
+        System.out.print("Operation >> ");
+        operation = scnr.nextLine();
+        parseOperation(operation);
+        scnr.close();
     }
 
-    public static void closeProgram() {
+    static void closeProgram() {
         frame.dispose();
     }
 
-    public static void updateDisplay(String text) {
+    static void updateDisplay(String text) {
         textDisplay.setText(text);
     }
 
-    public static void addToOperation(String text) {
+    static void addToOperation(String text) {
         operation += (text);
     }
 
-    public static void clearOperation() {
+    static void clearOperation() {
         operation = "";
     }
 
-    public static void parseOperation(String op) {
+    static void parseOperation(String op) {
         String currentOperation;
         int openIndex;
         int closeIndex;
@@ -190,9 +201,12 @@ public class Calculator {
             }
 
         } while (hasParentheses);
+
+        double finalResult = parseParentheses(op);
+        System.out.println("Result: " + finalResult);
     }
 
-    public static double parseParentheses(String op) {
+    static double parseParentheses(String op) {
         ArrayList<String> localTokens = new ArrayList<String>();
         String currentNum = "";
 
@@ -224,9 +238,153 @@ public class Calculator {
         if (!currentNum.equals("")) {
             localTokens.add(currentNum);
         }
+        return evaluateTokens(localTokens);
+    }
 
-        // return evaluateTokens(localTokens);
-        return 0.0;
+    static double evaluateTokens(ArrayList<String> tokens) {
+        int i;
+        for (i = 0; i < tokens.size(); i++) {
+            if (tokens.get(i).equals("sin") || tokens.get(i).equals("cos") || tokens.get(i).equals("tan")) {
+                switch (tokens.get(i)) {
+                    case "sin":
+                        tokens.set(i, String.valueOf(Functions.sine(Double.parseDouble(tokens.get(i + 1)))));
+                        tokens.remove(i + 1);
+                        i--;
+                        break;
+                    case "cos":
+                        tokens.set(i, String.valueOf(Functions.cosine(Double.parseDouble(tokens.get(i + 1)))));
+                        tokens.remove(i + 1);
+                        i--;
+                        break;
+                    case "tan":
+                        tokens.set(i, String.valueOf(Functions.tangent(Double.parseDouble(tokens.get(i + 1)))));
+                        tokens.remove(i + 1);
+                        i--;
+                        break;
+                    default: break;
+                }
+            }
+            if (tokens.get(i).equals("csc") || tokens.get(i).equals("sec") || tokens.get(i).equals("cot")) {
+                switch (tokens.get(i)) {
+                    case "csc":
+                        tokens.set(i, String.valueOf(Functions.cosecant(Double.parseDouble(tokens.get(i + 1)))));
+                        tokens.remove(i + 1);
+                        i--;
+                        break;
+                    case "sec":
+                        tokens.set(i, String.valueOf(Functions.secant(Double.parseDouble(tokens.get(i + 1)))));
+                        tokens.remove(i + 1);
+                        i--;
+                        break;
+                    case "cot":
+                        tokens.set(i, String.valueOf(Functions.cotangent(Double.parseDouble(tokens.get(i + 1)))));
+                        tokens.remove(i + 1);
+                        i--;
+                        break;
+                    default: break;
+                }
+            }
+            if (tokens.get(i).equals("arcsin") || tokens.get(i).equals("arccos") || tokens.get(i).equals("arctan")) {
+                switch (tokens.get(i)) {
+                    case "arcsin":
+                        tokens.set(i, String.valueOf(Functions.arcsine(Double.parseDouble(tokens.get(i + 1)))));
+                        tokens.remove(i + 1);
+                        i--;
+                        break;
+                    case "arccos":
+                        tokens.set(i, String.valueOf(Functions.arccos(Double.parseDouble(tokens.get(i + 1)))));
+                        tokens.remove(i + 1);
+                        i--;
+                        break;
+                    case "arctan":
+                        tokens.set(i, String.valueOf(Functions.arctangent(Double.parseDouble(tokens.get(i + 1)))));
+                        tokens.remove(i + 1);
+                        i--;
+                        break;
+                    default: break;
+                }
+            }
+            if (tokens.get(i).equals("log") || tokens.get(i).equals("ln") || tokens.get(i).equals("√")) {
+                switch (tokens.get(i)) {
+                    case "log":
+                        if (i + 2 < tokens.size() && Character.isDigit(tokens.get(i + 2).charAt(0))) {
+                            tokens.set(i, String.valueOf(Functions.log(Double.parseDouble(tokens.get(i + 1)), Double.parseDouble(tokens.get(i + 2)))));
+                            tokens.remove(i + 1);
+                            tokens.remove(i + 1);
+                        } else {
+                            tokens.set(i, String.valueOf(Functions.log(Double.parseDouble(tokens.get(i + 1)), 10.0)));
+                            tokens.remove(i + 1);
+                        }
+                        i--;
+                        break;
+                    case "ln":
+                        tokens.set(i, String.valueOf(Functions.ln(Double.parseDouble(tokens.get(i + 1)))));
+                        tokens.remove(i + 1);
+                        i--;
+                        break;
+                    case "√":
+                        tokens.set(i, String.valueOf(Functions.squareRoot(Double.parseDouble(tokens.get(i + 1)))));
+                        tokens.remove(i + 1);
+                        i--;
+                        break;
+                    default: break;
+                }
+            }
+        }
+
+        for (i = 0; i < tokens.size(); i++) {
+            String token = tokens.get(i);
+            if (token.equals("^") || token.equals("nRoot") || token.equals("x^2")) {
+                double left = Double.parseDouble(tokens.get(i - 1));
+                double result = 0;
+                if (token.equals("^")) {
+                    double right = Double.parseDouble(tokens.get(i + 1));
+                    result = Functions.nPower(left, right);
+                    tokens.set(i - 1, String.valueOf(result));
+                    tokens.remove(i); 
+                    tokens.remove(i); 
+                } else if (token.equals("nRoot")) {
+                    double right = Double.parseDouble(tokens.get(i + 1));
+                    result = Functions.nRoot(left, right);
+                    tokens.set(i - 1, String.valueOf(result));
+                    tokens.remove(i);
+                    tokens.remove(i);
+                } else if (token.equals("x^2")) {
+                    result = Functions.square(left);
+                    tokens.set(i - 1, String.valueOf(result));
+                    tokens.remove(i);
+                }
+                i--;
+            }
+        }
+
+        for (i = 0; i < tokens.size(); i++) {
+            String token = tokens.get(i);
+            if (token.equals("*") || token.equals("/")) {
+                double left = Double.parseDouble(tokens.get(i - 1));
+                double right = Double.parseDouble(tokens.get(i + 1));
+                double result = token.equals("*") ? Functions.multiply(left, right) : Functions.divide(left, right);
+                tokens.set(i - 1, String.valueOf(result));
+                tokens.remove(i);
+                tokens.remove(i);
+                i--;
+            }
+        }
+
+        for (i = 0; i < tokens.size(); i++) {
+            String token = tokens.get(i);
+            if (token.equals("+") || token.equals("-")) {
+                double left = Double.parseDouble(tokens.get(i - 1));
+                double right = Double.parseDouble(tokens.get(i + 1));
+                double result = token.equals("+") ? Functions.add(left, right) : Functions.subtract(left, right);
+                tokens.set(i - 1, String.valueOf(result));
+                tokens.remove(i);
+                tokens.remove(i);
+                i--;
+            }
+        }
+
+        return Double.parseDouble(tokens.get(0));
     }
 
 }

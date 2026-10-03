@@ -60,7 +60,7 @@ public class Functions {
         return Math.asin(a);
     }
 
-    static double arcos(double a) {
+    static double arccos(double a) {
         return Math.acos(a);
     }
 
