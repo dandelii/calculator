@@ -29,14 +29,14 @@ public class Calculator {
     static JButton cos = new JButton("cos");
     static JButton tan = new JButton("tan");
     static JButton exponent = new JButton("^");
-    static JButton square = new JButton("x^2");
+    static JButton square = new JButton("^2");
     static JButton divide = new JButton("÷");
     static JButton log = new JButton("log");
     static JButton multiply = new JButton("*");
     static JButton ln = new JButton("ln");
     static JButton minus = new JButton("-");
     static JButton decimal = new JButton(".");
-    static JButton negative = new JButton("(-)");
+    static JButton negative = new JButton("(-1)");
     static JButton plus = new JButton("+");
 
     static JButton one = new JButton("1");
@@ -273,7 +273,11 @@ public class Calculator {
                 double result = parseParentheses(currentOperation);
                 String beforeParen = op.substring(0, openIndex);
                 String afterParen = op.substring(closeIndex + 1);
-                op = beforeParen + result + afterParen;
+                if (openIndex > 0 && Character.isDigit(beforeParen.charAt(beforeParen.length() - 1))) {
+                    op = beforeParen + "*" + result + afterParen;
+                } else {
+                    op = beforeParen + result + afterParen;
+                }
             }
 
         } while (hasParentheses);
@@ -328,6 +332,14 @@ public class Calculator {
     static double evaluateTokens(ArrayList<String> tokens) {
         int i;
         for (i = 0; i < tokens.size(); i++) {
+            if (tokens.get(i).equals("-")) {
+                if (i == 0 || tokens.get(i - 1).equals("*") || tokens.get(i - 1).equals("÷") || tokens.get(i - 1).equals("+") || tokens.get(i - 1).equals("-")) {
+                    tokens.set(i, "-" + tokens.get(i + 1));
+                    tokens.remove(i + 1);
+                }
+            }
+        }
+        for (i = 0; i < tokens.size(); i++) {
             if (tokens.get(i).equals("sin") || tokens.get(i).equals("cos") || tokens.get(i).equals("tan")) {
                 switch (tokens.get(i)) {
                     case "sin":
@@ -347,6 +359,7 @@ public class Calculator {
                         break;
                     default: break;
                 }
+                continue;
             }
             if (tokens.get(i).equals("csc") || tokens.get(i).equals("sec") || tokens.get(i).equals("cot")) {
                 switch (tokens.get(i)) {
@@ -367,6 +380,7 @@ public class Calculator {
                         break;
                     default: break;
                 }
+                continue;
             }
             if (tokens.get(i).equals("arcsin") || tokens.get(i).equals("arccos") || tokens.get(i).equals("arctan")) {
                 switch (tokens.get(i)) {
@@ -387,6 +401,7 @@ public class Calculator {
                         break;
                     default: break;
                 }
+                continue;
             }
             if (tokens.get(i).equals("log") || tokens.get(i).equals("ln") || tokens.get(i).equals("√")) {
                 switch (tokens.get(i)) {
@@ -458,13 +473,25 @@ public class Calculator {
         for (i = 0; i < tokens.size(); i++) {
             String token = tokens.get(i);
             if (token.equals("+") || token.equals("-")) {
-                double left = Double.parseDouble(tokens.get(i - 1));
-                double right = Double.parseDouble(tokens.get(i + 1));
-                double result = token.equals("+") ? Functions.add(left, right) : Functions.subtract(left, right);
-                tokens.set(i - 1, String.valueOf(result));
-                tokens.remove(i);
-                tokens.remove(i);
-                i--;
+                if (i == 0) {
+                    if (token.equals("-")) {
+                        double right = Double.parseDouble(tokens.get(i + 1));
+                        tokens.set(i, String.valueOf(-right));
+                        tokens.remove(i + 1);
+                    } else {
+                        tokens.remove(i);
+                    }
+                    i--;
+                } else {
+                    double left = Double.parseDouble(tokens.get(i - 1));
+                    double right = Double.parseDouble(tokens.get(i + 1));
+                    double result = token.equals("+") ? Functions.add(left, right) : Functions.subtract(left, right);
+
+                    tokens.set(i - 1, String.valueOf(result));
+                    tokens.remove(i);
+                    tokens.remove(i);
+                    i--;
+                }
             }
         }
 
