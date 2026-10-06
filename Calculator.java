@@ -9,9 +9,12 @@ public class Calculator {
     static JFrame frame = new JFrame();
     static JPanel display = new JPanel();
     static JLabel textDisplay = new JLabel();
+    static JLabel previousTextDisplay = new JLabel();
     static JPanel buttons = new JPanel(new GridLayout(9, 5));
     static ArrayList<JButton> buttonList = new ArrayList<JButton>();
     static boolean secondOn = false;
+    static boolean lastEnter = false;
+    static int upClicked = 0;
 
     static JButton up = new JButton("↑");
     static JButton left = new JButton("←");
@@ -78,13 +81,20 @@ public class Calculator {
             buttons.add(buttonList.get(i));
         }
 
-        textDisplay.setSize(300, 100);
-        updateDisplay("");
-
+        previousTextDisplay.setSize(300, 50);
+        textDisplay.setSize(300, 50);
+        previousTextDisplay.setText("");
+        textDisplay.setText("");
         display.setLayout(new BoxLayout(display, BoxLayout.Y_AXIS));
 
         buttons.setMaximumSize(new Dimension(400, 500));
-        textDisplay.setMaximumSize(new Dimension(400, 100));
+        textDisplay.setMaximumSize(new Dimension(400, 50));
+        textDisplay.setVerticalAlignment(SwingConstants.CENTER);
+        textDisplay.setHorizontalAlignment(SwingConstants.CENTER);
+        previousTextDisplay.setMaximumSize(new Dimension(400, 50));
+        previousTextDisplay.setVerticalAlignment(SwingConstants.BOTTOM);
+        previousTextDisplay.setHorizontalAlignment(SwingConstants.CENTER);
+        display.add(previousTextDisplay);
         display.add(textDisplay);
         display.add(buttons);
         frame.add(display);
@@ -94,6 +104,8 @@ public class Calculator {
             public void actionPerformed(ActionEvent e) {
                 clearOperation();
                 updateDisplay("");
+                previousTextDisplay.setText("");
+
             }
         });
         clearAll.addActionListener(new ActionListener() {
@@ -102,6 +114,8 @@ public class Calculator {
                 clearOperation();
                 operations.clear();
                 updateDisplay("");
+                previousTextDisplay.setText("");
+                upClicked = 0;
             }
         });
         del.addActionListener(new ActionListener() {
@@ -116,12 +130,14 @@ public class Calculator {
                         operation = operation.substring(0, operation.length() - 1);
                     }
                     updateDisplay(operation);
+                    lastEnter = false;
                 }
             }
         });
         enter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                lastEnter = true;
                 if (!operation.equals("")) {
                     operations.add(operation);
                     parseOperation(operation);
@@ -132,6 +148,12 @@ public class Calculator {
         openParen.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (lastEnter) {
+                    operations.add(operation);
+                    clearOperation();
+                    previousTextDisplay.setText(operations.get(operations.size() - 1));
+                }
+                lastEnter = false;
                 addToOperation("(");
                 updateDisplay(operation);
             }
@@ -139,6 +161,12 @@ public class Calculator {
         closeParen.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (lastEnter) {
+                    operations.add(operation);
+                    clearOperation();
+                    previousTextDisplay.setText(operations.get(operations.size() - 1));
+                }
+                lastEnter = false;
                 addToOperation(")");
                 updateDisplay(operation);
             }
@@ -146,6 +174,12 @@ public class Calculator {
         sin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (lastEnter) {
+                    operations.add(operation);
+                    clearOperation();
+                    previousTextDisplay.setText(operations.get(operations.size() - 1));
+                }
+                lastEnter = false;
                 addToOperation("sin");
                 updateDisplay(operation);
             }
@@ -153,6 +187,12 @@ public class Calculator {
         cos.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (lastEnter) {
+                    operations.add(operation);
+                    clearOperation();
+                    previousTextDisplay.setText(operations.get(operations.size() - 1));
+                }
+                lastEnter = false;
                 addToOperation("cos");
                 updateDisplay(operation);
             }
@@ -160,6 +200,12 @@ public class Calculator {
         tan.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (lastEnter) {
+                    operations.add(operation);
+                    clearOperation();
+                    previousTextDisplay.setText(operations.get(operations.size() - 1));
+                }
+                lastEnter = false;
                 addToOperation("tan");
                 updateDisplay(operation);
             }
@@ -167,6 +213,12 @@ public class Calculator {
         csc.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (lastEnter) {
+                    operations.add(operation);
+                    clearOperation();
+                    previousTextDisplay.setText(operations.get(operations.size() - 1));
+                }
+                lastEnter = false;
                 addToOperation("csc");
                 updateDisplay(operation);
             }
@@ -174,6 +226,12 @@ public class Calculator {
         sec.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (lastEnter) {
+                    operations.add(operation);
+                    clearOperation();
+                    previousTextDisplay.setText(operations.get(operations.size() - 1));
+                }
+                lastEnter = false;
                 addToOperation("sec");
                 updateDisplay(operation);
             }
@@ -181,6 +239,12 @@ public class Calculator {
         cot.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (lastEnter) {
+                    operations.add(operation);
+                    clearOperation();
+                    previousTextDisplay.setText(operations.get(operations.size() - 1));
+                }
+                lastEnter = false;
                 addToOperation("cot");
                 updateDisplay(operation);
             }
@@ -188,6 +252,12 @@ public class Calculator {
         arcsin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (lastEnter) {
+                    operations.add(operation);
+                    clearOperation();
+                    previousTextDisplay.setText(operations.get(operations.size() - 1));
+                }
+                lastEnter = false;
                 addToOperation("arcsin");
                 updateDisplay(operation);
             }
@@ -195,6 +265,12 @@ public class Calculator {
         arccos.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (lastEnter) {
+                    operations.add(operation);
+                    clearOperation();
+                    previousTextDisplay.setText(operations.get(operations.size() - 1));
+                }
+                lastEnter = false;
                 addToOperation("arccos");
                 updateDisplay(operation);
             }
@@ -202,6 +278,12 @@ public class Calculator {
         arctan.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (lastEnter) {
+                    operations.add(operation);
+                    clearOperation();
+                    previousTextDisplay.setText(operations.get(operations.size() - 1));
+                }
+                lastEnter = false;
                 addToOperation("arctan");
                 updateDisplay(operation);
             }
@@ -229,6 +311,12 @@ public class Calculator {
         ActionListener generalButtonHandler = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (lastEnter) {
+                    operations.add(operation);
+                    clearOperation();
+                    previousTextDisplay.setText(operations.get(operations.size() - 1));
+                }
+                lastEnter = false;
                 String cmd = e.getActionCommand();
                 if (!cmd.equals("")) { 
                     addToOperation(cmd);
@@ -239,6 +327,12 @@ public class Calculator {
         pi.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (lastEnter) {
+                    operations.add(operation);
+                    clearOperation();
+                    previousTextDisplay.setText(operations.get(operations.size() - 1));
+                }
+                lastEnter = false;
                 addToOperation(Double.toString(Math.PI));
                 updateDisplay(operation);
             }
@@ -246,15 +340,64 @@ public class Calculator {
         squareRoot.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (lastEnter) {
+                    operations.add(operation);
+                    clearOperation();
+                    previousTextDisplay.setText(operations.get(operations.size() - 1));
+                }
+                lastEnter = false;
                 addToOperation("√");
                 updateDisplay(operation);
+            }
+        });
+        off.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                closeProgram();
             }
         });
         eToTheX.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (lastEnter) {
+                    operations.add(operation);
+                    clearOperation();
+                    previousTextDisplay.setText(operations.get(operations.size() - 1));
+                }
+                lastEnter = false;
                 addToOperation("e^");
                 updateDisplay(operation);
+            }
+        });
+        up.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!operations.isEmpty()) {
+                    if (upClicked < operations.size()) {
+                        upClicked++;
+                        operation = operations.get(operations.size() - upClicked);
+                        updateDisplay(operation);
+                        previousTextDisplay.setText(operations.get(operations.size() - upClicked - 1));
+                    }
+                }
+            }
+        });
+        down.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!operations.isEmpty()) {
+                    if (upClicked > 1) {
+                        upClicked--;
+                        operation = operations.get(operations.size() - upClicked);
+                        updateDisplay(operation);
+                        previousTextDisplay.setText(operations.get(operations.size() - upClicked - 1));
+                    } else if (upClicked == 1) {
+                        upClicked--;
+                        operation = "";
+                        updateDisplay(operation);
+                        previousTextDisplay.setText(operations.get(operations.size() - 1));
+                    }
+                }
             }
         });
         JButton[] generalKeys = {one, two, three, four, five, six, seven, eight, nine, zero, plus, minus, multiply, divide, exponent, square, squareRoot, log, ln, decimal, negative};
