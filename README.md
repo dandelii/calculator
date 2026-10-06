@@ -19,3 +19,6 @@ But that's the beautiful thing about programming: the tool already existing does
 Channing Joli Ernest  
 Email — channing.ernest@gmail.com  
 Phone — (352) 531-5866
+
+## Misc
+The other account (channingernest) that made the initial files is my school account; the entire project was built by me, I just forgot to use my main account to make the initial repository.
