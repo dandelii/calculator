@@ -11,6 +11,7 @@ public class Calculator {
     static JLabel textDisplay = new JLabel();
     static JPanel buttons = new JPanel(new GridLayout(9, 5));
     static ArrayList<JButton> buttonList = new ArrayList<JButton>();
+    static boolean secondOn = false;
 
     static JButton up = new JButton("↑");
     static JButton left = new JButton("←");
@@ -22,12 +23,19 @@ public class Calculator {
     static JButton del = new JButton("del");
     static JButton clear = new JButton("CE");
     static JButton clearAll = new JButton("CA");
+    static JButton off = new JButton("off");
     static JButton openParen = new JButton("(");
     static JButton closeParen = new JButton(")");
 
     static JButton sin = new JButton("sin");
     static JButton cos = new JButton("cos");
     static JButton tan = new JButton("tan");
+    static JButton csc = new JButton("csc");
+    static JButton sec = new JButton("sec");
+    static JButton cot = new JButton("cot");
+    static JButton arcsin = new JButton("arcsin");
+    static JButton arccos = new JButton("arccos");
+    static JButton arctan = new JButton("arctan");
     static JButton exponent = new JButton("^");
     static JButton square = new JButton("^2");
     static JButton divide = new JButton("÷");
@@ -38,6 +46,10 @@ public class Calculator {
     static JButton decimal = new JButton(".");
     static JButton negative = new JButton("(-1)");
     static JButton plus = new JButton("+");
+
+    static JButton pi = new JButton("π");
+    static JButton squareRoot = new JButton("√");
+    static JButton eToTheX = new JButton("e^x");
 
     static JButton one = new JButton("1");
     static JButton two = new JButton("2");
@@ -59,60 +71,7 @@ public class Calculator {
     public static void main(String[] args) {
         int i = 0;
 
-        // row 1
-        buttonList.add(second);
-        buttonList.add(del);
-        buttonList.add(new JButton());
-        buttonList.add(up);
-        buttonList.add(new JButton());
-        // row 2
-        buttonList.add(new JButton());
-        buttonList.add(new JButton());
-        buttonList.add(left);
-        buttonList.add(down);
-        buttonList.add(right);
-        // row 3
-        buttonList.add(new JButton());
-        buttonList.add(new JButton());
-        buttonList.add(new JButton());
-        buttonList.add(new JButton());
-        buttonList.add(clear);
-        // row 4
-        buttonList.add(new JButton());
-        buttonList.add(sin);
-        buttonList.add(cos);
-        buttonList.add(tan);
-        buttonList.add(exponent);
-        // row 5
-        buttonList.add(square);
-        buttonList.add(new JButton());
-        buttonList.add(openParen);
-        buttonList.add(closeParen);
-        buttonList.add(divide);
-        // row 6
-        buttonList.add(log);
-        buttonList.add(seven);
-        buttonList.add(eight);
-        buttonList.add(nine);
-        buttonList.add(multiply);
-        // row 7
-        buttonList.add(ln);
-        buttonList.add(four);
-        buttonList.add(five);
-        buttonList.add(six);
-        buttonList.add(minus);
-        // row 8
-        buttonList.add(new JButton());
-        buttonList.add(one);
-        buttonList.add(two);
-        buttonList.add(three);
-        buttonList.add(plus);
-        // row 9
-        buttonList.add(new JButton());
-        buttonList.add(zero);
-        buttonList.add(decimal);
-        buttonList.add(negative);
-        buttonList.add(enter);
+        addFirstButtons();
 
         for (i = 0; i < buttonList.size(); i++) {
             buttonList.get(i).setBackground(buttonColor);
@@ -205,6 +164,67 @@ public class Calculator {
                 updateDisplay(operation);
             }
         });
+        csc.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addToOperation("csc");
+                updateDisplay(operation);
+            }
+        });
+        sec.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addToOperation("sec");
+                updateDisplay(operation);
+            }
+        });
+        cot.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addToOperation("cot");
+                updateDisplay(operation);
+            }
+        });
+        arcsin.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addToOperation("arcsin");
+                updateDisplay(operation);
+            }
+        });
+        arccos.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addToOperation("arccos");
+                updateDisplay(operation);
+            }
+        });
+        arctan.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addToOperation("arctan");
+                updateDisplay(operation);
+            }
+        });
+        second.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                secondOn = !secondOn;
+                buttonList.clear();
+                buttons.removeAll();
+                if (secondOn) {
+                    addSecondButtons();
+                } else {
+                    addFirstButtons();
+                }
+                for (int i = 0; i < buttonList.size(); i++) {
+                    buttonList.get(i).setBackground(buttonColor);
+                    buttons.add(buttonList.get(i));
+                }
+                buttons.revalidate();
+                buttons.repaint();
+            }
+        });
 
         ActionListener generalButtonHandler = new ActionListener() {
             @Override
@@ -216,7 +236,28 @@ public class Calculator {
                 }
             }
         };
-        JButton[] generalKeys = {one, two, three, four, five, six, seven, eight, nine, zero, plus, minus, multiply, divide, exponent, square, log, ln, decimal, negative};
+        pi.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addToOperation(Double.toString(Math.PI));
+                updateDisplay(operation);
+            }
+        });
+        squareRoot.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addToOperation("√");
+                updateDisplay(operation);
+            }
+        });
+        eToTheX.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addToOperation("e^");
+                updateDisplay(operation);
+            }
+        });
+        JButton[] generalKeys = {one, two, three, four, five, six, seven, eight, nine, zero, plus, minus, multiply, divide, exponent, square, squareRoot, log, ln, decimal, negative};
         for (JButton key : generalKeys) {
             key.addActionListener(generalButtonHandler);
         }
@@ -240,6 +281,120 @@ public class Calculator {
 
     static void clearOperation() {
         operation = "";
+    }
+
+    static void addFirstButtons() {
+        // row 1
+        buttonList.add(second);
+        buttonList.add(del);
+        buttonList.add(new JButton());
+        buttonList.add(up);
+        buttonList.add(off);
+        // row 2
+        buttonList.add(new JButton());
+        buttonList.add(new JButton());
+        buttonList.add(left);
+        buttonList.add(down);
+        buttonList.add(right);
+        // row 3
+        buttonList.add(clearAll);
+        buttonList.add(new JButton());
+        buttonList.add(new JButton());
+        buttonList.add(new JButton());
+        buttonList.add(clear);
+        // row 4
+        buttonList.add(new JButton());
+        buttonList.add(sin);
+        buttonList.add(cos);
+        buttonList.add(tan);
+        buttonList.add(exponent);
+        // row 5
+        buttonList.add(square);
+        buttonList.add(new JButton());
+        buttonList.add(openParen);
+        buttonList.add(closeParen);
+        buttonList.add(divide);
+        // row 6
+        buttonList.add(log);
+        buttonList.add(seven);
+        buttonList.add(eight);
+        buttonList.add(nine);
+        buttonList.add(multiply);
+        // row 7
+        buttonList.add(ln);
+        buttonList.add(four);
+        buttonList.add(five);
+        buttonList.add(six);
+        buttonList.add(minus);
+        // row 8
+        buttonList.add(new JButton());
+        buttonList.add(one);
+        buttonList.add(two);
+        buttonList.add(three);
+        buttonList.add(plus);
+        // row 9
+        buttonList.add(new JButton());
+        buttonList.add(zero);
+        buttonList.add(decimal);
+        buttonList.add(negative);
+        buttonList.add(enter);
+    }
+
+    static void addSecondButtons() {
+        // row 1
+        buttonList.add(second);
+        buttonList.add(del);
+        buttonList.add(new JButton());
+        buttonList.add(up);
+        buttonList.add(off);
+        // row 2
+        buttonList.add(new JButton());
+        buttonList.add(new JButton());
+        buttonList.add(left);
+        buttonList.add(down);
+        buttonList.add(right);
+        // row 3
+        buttonList.add(clearAll);
+        buttonList.add(csc);
+        buttonList.add(sec);
+        buttonList.add(cot);
+        buttonList.add(clear);
+        // row 4
+        buttonList.add(new JButton());
+        buttonList.add(arcsin);
+        buttonList.add(arccos);
+        buttonList.add(arctan);
+        buttonList.add(pi);
+        // row 5
+        buttonList.add(squareRoot);
+        buttonList.add(new JButton());
+        buttonList.add(openParen);
+        buttonList.add(closeParen);
+        buttonList.add(divide);
+        // row 6
+        buttonList.add(log);
+        buttonList.add(seven);
+        buttonList.add(eight);
+        buttonList.add(nine);
+        buttonList.add(multiply);
+        // row 7
+        buttonList.add(eToTheX);
+        buttonList.add(four);
+        buttonList.add(five);
+        buttonList.add(six);
+        buttonList.add(minus);
+        // row 8
+        buttonList.add(new JButton());
+        buttonList.add(one);
+        buttonList.add(two);
+        buttonList.add(three);
+        buttonList.add(plus);
+        // row 9
+        buttonList.add(new JButton());
+        buttonList.add(zero);
+        buttonList.add(decimal);
+        buttonList.add(negative);
+        buttonList.add(enter);
     }
 
     static void parseOperation(String op) {
@@ -286,6 +441,7 @@ public class Calculator {
     }
 
     static double parseParentheses(String op) {
+        op = op.replace("e^", "e");
         ArrayList<String> localTokens = new ArrayList<String>();
         String currentNum = "";
 
@@ -403,7 +559,7 @@ public class Calculator {
                 }
                 continue;
             }
-            if (tokens.get(i).equals("log") || tokens.get(i).equals("ln") || tokens.get(i).equals("√")) {
+            if (tokens.get(i).equals("log") || tokens.get(i).equals("ln") || tokens.get(i).equals("√") || tokens.get(i).equals("e")) {
                 switch (tokens.get(i)) {
                     case "log":
                         if (i + 2 < tokens.size() && Character.isDigit(tokens.get(i + 2).charAt(0))) {
@@ -423,6 +579,11 @@ public class Calculator {
                         break;
                     case "√":
                         tokens.set(i, String.valueOf(Functions.squareRoot(Double.parseDouble(tokens.get(i + 1)))));
+                        tokens.remove(i + 1);
+                        i--;
+                        break;
+                    case "e":
+                        tokens.set(i, String.valueOf(Functions.e(Double.parseDouble(tokens.get(i + 1)))));
                         tokens.remove(i + 1);
                         i--;
                         break;
